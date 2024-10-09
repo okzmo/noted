@@ -1,0 +1,43 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "jsx": "react-jsx", // Specify what JSX code is generated.
+    "lib": ["ESNext", "DOM", "DOM.Iterable"], // adding the "DOM" library helps vs-code to recognize the window & document objects. Specify a set of bundled library declaration files that describe the target runtime environment.
+    "useDefineForClassFields": true, // Emit ECMAScript-standard-compliant class fields.
+    "moduleDetection": "force", // <--- defaults to `auto`. Control what method is used to detect module-format JS files.
+    "module": "ESNext", // <--- defaults to `commonjs`. Specify what module code is generated.
+    "moduleResolution": "Bundler", // Specify how TypeScript looks up a file from a given module specifier.
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true, // Option 'allowImportingTsExtensions' can only be used when either 'noEmit' or 'emitDeclarationOnly' is set.ts
+    "baseUrl": "./", // Specify the base directory to resolve non-relative module names.
+    "typeRoots": ["node_modules/@types"], // Specify multiple folders that act like './node_modules/@types'.
+    "paths": {},
+    "checkJs": true, // without it? this config file would not apply to js/jsx files. Enable error reporting in type-checked JavaScript files.
+    "maxNodeModuleJsDepth": 0, // Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'.
+    "noEmit": false, // set to `true` to disable emitting files from a compilation.
+    "outDir": "./dist", // Specify an output folder for all emitted files.
+    "declaration": true, // Generate .d.ts files from TypeScript and JavaScript files in your project.
+    "emitDeclarationOnly": true, // Only output d.ts files and not JavaScript files
+    "isolatedModules": true, // <--- Setting to `true` tells TypeScript to warn you if you write certain code that can't be correctly interpreted by a single-file transpilation process. Ensure that each file can be safely transpiled without relying on other imports.
+    "esModuleInterop": true, // Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.
+    "allowSyntheticDefaultImports": true, // Allow 'import x from y' when a module doesn't have a default export.
+    "forceConsistentCasingInFileNames": true, // Ensure that casing is correct in imports.
+    "strict": true, // <--- Enable all strict type-checking options.
+    "noImplicitAny": true, // <--- Enable error reporting for expressions and declarations with an implied 'any' type.
+    "noImplicitThis": true, // <---Enable error reporting when 'this' is given the type 'any'.
+    "useUnknownInCatchVariables": true, // <--- Default catch clause variables as 'unknown' instead of 'any'.
+    "alwaysStrict": true, // <--- Ensure 'use strict' is always emitted.
+    "noUnusedLocals": true, // <--- Enable error reporting when local variables aren't read.
+    "noUnusedParameters": true, // <--- Raise an error when a function parameter isn't read.
+    "exactOptionalPropertyTypes": false, // <--- Interpret optional property types as written, rather than adding 'undefined'.
+    "noImplicitReturns": true, // <--- Enable error reporting for codepaths that do not explicitly return in a function.
+    "noFallthroughCasesInSwitch": true, // <--- Enable error reporting for fallthrough cases in switch statements.
+    "noUncheckedIndexedAccess": true, // <--- Add 'undefined' to a type when accessed using an index.
+    "noImplicitOverride": true, // <--- Ensure overriding members in derived classes are marked with an override modifier.
+    "noPropertyAccessFromIndexSignature": false, // <--- settings this to true marks obj['firstName'] as an error, and recommends obj.firstName instead. Enforces using indexed accessors for keys declared using an indexed type.
+    "allowUnusedLabels": false, // <--- Disable error reporting for unused labels.
+    "skipLibCheck": true // Skip type checking all .d.ts files.
+  },
+  "include": ["lib"]
+}
