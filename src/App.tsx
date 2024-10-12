@@ -3,7 +3,10 @@ import "./App.css";
 function App() {
   return (
     <div className="App">
-      <Noted />
+      <Noted
+        apiKey={import.meta.env.NOTION_API_KEY}
+        boardId={import.meta.env.NOTION_BOARD_ID}
+      />
     </div>
   );
 }

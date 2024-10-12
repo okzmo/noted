@@ -1,38 +1,38 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Noted.module.css";
 import clsx from "clsx";
 import { useSelection } from "./Noted.hooks";
 import { AnimatePresence, motion } from "framer-motion";
+import {
+  notionInputsVariants,
+  selectTextVariants,
+  textAreaVariants,
+} from "./Noted.animations";
+import { CreateACard } from "./Noted.services";
 
-export default function Noted() {
+export default function Noted({
+  apiKey,
+  boardId,
+}: {
+  apiKey: string;
+  boardId: string;
+}) {
+  console.log(apiKey, boardId);
   const resizeHandleRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [bugTitle, setBugTitle] = useState("");
   const {
     handleKeyDown,
     handleMouseDown,
     handleMouseUp,
     handleMouseMove,
     handleResizeMouseDown,
+    goToDescriptionStep,
     selectionInfos,
     selecting,
     active,
     visible,
   } = useSelection();
-
-  const selectVariants = {
-    initial: {
-      opacity: 0,
-      y: 5,
-    },
-    exit: {
-      opacity: 0,
-      y: 5,
-      transition: {
-        ease: "easeOut",
-        duration: 0.1,
-      },
-    },
-  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -105,17 +105,36 @@ export default function Noted() {
               )}
           </div>
 
+          {selectionInfos.hasTitle && (
+            <motion.div
+              variants={notionInputsVariants}
+              initial="initial"
+              animate="animate"
+              transition={{
+                ease: "easeOut",
+                delay: 0.7,
+              }}
+              className={styles.inputsWrapper}
+            >
+              <div className={styles.assign}></div>
+              <div className={styles.type}></div>
+            </motion.div>
+          )}
           <motion.div
             initial={{ width: "250px" }}
             animate={{
-              width: selectionInfos.selectionEnded ? "450px" : "250px",
-              height: selectionInfos.selectionEnded ? "300px" : "48px",
+              width: selectionInfos.hasTitle
+                ? "450px"
+                : selectionInfos.selectionEnded
+                  ? "350px"
+                  : "250px",
+              height: selectionInfos.hasTitle ? "300px" : "48px",
             }}
             transition={{
               type: "spring",
               damping: 18,
               stiffness: 150,
-              delay: selectionInfos.selectionEnded ? 0.1 : 0,
+              delay: selectionInfos.hasTitle ? 0.1 : 0,
             }}
             className={clsx(styles.inputWrapper)}
           >
@@ -123,17 +142,9 @@ export default function Noted() {
               {!selectionInfos.selectionEnded && (
                 <motion.span
                   key="select"
-                  variants={selectVariants}
+                  variants={selectTextVariants}
                   initial="initial"
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      ease: "easeOut",
-                      duration: 0.1,
-                      delay: 0.3,
-                    },
-                  }}
+                  animate="animate"
                   exit="exit"
                   className={styles.select}
                 >
@@ -141,26 +152,25 @@ export default function Noted() {
                 </motion.span>
               )}
 
-              {selectionInfos.selectionEnded && (
+              {selectionInfos.selectionEnded && !selectionInfos.hasTitle && (
+                <motion.input
+                  key="title-input"
+                  variants={selectTextVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className={styles.titleInput}
+                  placeholder="Describe the bug..."
+                />
+              )}
+
+              {selectionInfos.hasTitle && (
                 <motion.textarea
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: 1,
-                    transition: {
-                      ease: "easeOut",
-                      duration: 0.1,
-                      delay: 0.3,
-                    },
-                  }}
-                  exit={{
-                    opacity: 0,
-                    transition: {
-                      ease: "easeOut",
-                      duration: 0.1,
-                      delay: 0,
-                    },
-                  }}
-                  key="input"
+                  variants={textAreaVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  key="description-input"
                   className={styles.input}
                   placeholder="Send a message..."
                 />

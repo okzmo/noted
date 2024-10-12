@@ -18,6 +18,7 @@ export const useSelection = () => {
     xStart: 0,
     yStart: 0,
     selectionEnded: false,
+    hasTitle: false,
   });
   const selectedRef = useRef({
     xStart: 0,
@@ -27,6 +28,7 @@ export const useSelection = () => {
     width: 0,
     height: 0,
     selectionEnded: false,
+    hasTitle: false,
   });
 
   const handleMouseDown = useCallback(
@@ -50,6 +52,7 @@ export const useSelection = () => {
           width: 0,
           height: 0,
           selectionEnded: false,
+          hasTitle: false,
         };
       }
 
@@ -113,6 +116,7 @@ export const useSelection = () => {
       width: 0,
       height: 0,
       selectionEnded: false,
+      hasTitle: false,
     };
 
     setSelectionInfos(selectedRef.current);
@@ -143,6 +147,14 @@ export const useSelection = () => {
     [keys, active, resetSelection],
   );
 
+  const goToDescriptionStep = useCallback(() => {
+    selectedRef.current = {
+      ...selectedRef.current,
+      hasTitle: true,
+    };
+    setSelectionInfos(selectedRef.current);
+  }, []);
+
   return {
     handleKeyDown,
     handleMouseDown,
@@ -150,6 +162,7 @@ export const useSelection = () => {
     handleMouseMove,
     handleMouseUp,
     resetSelection,
+    goToDescriptionStep,
     active,
     visible,
     keys,
