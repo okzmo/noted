@@ -4,8 +4,8 @@ function App() {
   return (
     <div className="App">
       <Noted
-        apiKey={import.meta.env.NOTION_API_KEY}
-        boardId={import.meta.env.NOTION_BOARD_ID}
+        apiKey={import.meta.env.VITE_NOTION_API_KEY}
+        boardId={import.meta.env.VITE_NOTION_BOARD_ID}
       />
     </div>
   );

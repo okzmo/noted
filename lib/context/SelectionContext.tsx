@@ -1,8 +1,49 @@
-import { useCallback, useRef, useState } from "react";
+import { createContext, ReactNode, useCallback, useRef, useState } from "react";
 
-export const useSelection = () => {
+export interface SelectionContextProps {
+  handleKeyDown: (event: KeyboardEvent) => void;
+  handleMouseDown: (event: MouseEvent) => void;
+  handleResizeMouseDown: (event: MouseEvent) => void;
+  handleMouseMove: (event: MouseEvent) => void;
+  handleMouseUp: () => void;
+  resetSelection: () => void;
+  goToDescriptionStep: () => void;
+  setSelecting: (value: boolean) => void;
+  setVisible: (value: boolean) => void;
+  visible: boolean;
+  keys: string[];
+  moving: boolean;
+  moveOffset: {
+    x: number;
+    y: number;
+  };
+  selecting: boolean;
+  selectionInfos: any;
+}
+
+export const SelectionContext = createContext<SelectionContextProps>({
+  handleKeyDown: () => {},
+  handleMouseDown: () => {},
+  handleResizeMouseDown: () => {},
+  handleMouseMove: () => {},
+  handleMouseUp: () => {},
+  resetSelection: () => {},
+  goToDescriptionStep: () => {},
+  setSelecting: () => {},
+  setVisible: () => {},
+  visible: false,
+  keys: [],
+  moving: false,
+  moveOffset: {
+    x: 0,
+    y: 0,
+  },
+  selecting: false,
+  selectionInfos: {},
+});
+
+export const SelectionProvider = ({ children }: { children: ReactNode }) => {
   const [keys, setKeys] = useState<string[]>([]);
-  const [active, setActive] = useState(false);
   const [visible, setVisible] = useState(false);
   const [moving, setMoving] = useState(false);
   const [selecting, setSelecting] = useState(false);
@@ -33,7 +74,7 @@ export const useSelection = () => {
 
   const handleMouseDown = useCallback(
     (event: MouseEvent) => {
-      if (!active) return;
+      if (!visible) return;
       if (event.button !== 0) return;
 
       if (event.target === document.getElementById("ntd-selectionRect")) {
@@ -58,7 +99,7 @@ export const useSelection = () => {
 
       setSelectionInfos(selectedRef.current);
     },
-    [active],
+    [visible],
   );
 
   const handleResizeMouseDown = useCallback((event: MouseEvent) => {
@@ -125,26 +166,25 @@ export const useSelection = () => {
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (!["Alt", "Escape"].includes(event.key)) return;
+      console.log(event.key);
 
       if (event.key === "Escape") {
         if (selectedRef.current.width > 0 && selectedRef.current.height > 0) {
           resetSelection();
         } else {
           setVisible(false);
-          setActive(false);
           setKeys([]);
         }
         return;
       }
 
-      if (!keys[0] && !active) setKeys([event.key]);
+      if (!keys[0] && !visible) setKeys([event.key]);
       if (keys[0] === "Alt" && event.altKey) {
         setVisible(true);
-        setActive(true);
         setKeys([]);
       }
     },
-    [keys, active, resetSelection],
+    [keys, visible, resetSelection],
   );
 
   const goToDescriptionStep = useCallback(() => {
@@ -155,20 +195,27 @@ export const useSelection = () => {
     setSelectionInfos(selectedRef.current);
   }, []);
 
-  return {
-    handleKeyDown,
-    handleMouseDown,
-    handleResizeMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-    resetSelection,
-    goToDescriptionStep,
-    active,
-    visible,
-    keys,
-    moving,
-    moveOffset,
-    selecting,
-    selectionInfos,
-  };
+  return (
+    <SelectionContext.Provider
+      value={{
+        handleKeyDown,
+        handleMouseDown,
+        handleResizeMouseDown,
+        handleMouseMove,
+        handleMouseUp,
+        resetSelection,
+        setSelecting,
+        goToDescriptionStep,
+        setVisible,
+        visible,
+        keys,
+        moving,
+        moveOffset,
+        selecting,
+        selectionInfos,
+      }}
+    >
+      {children}
+    </SelectionContext.Provider>
+  );
 };
