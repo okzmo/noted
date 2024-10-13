@@ -1,13 +1,21 @@
-import { useSelection } from "lib/hooks/useSelection";
-import { GetMembers } from "../services/get-members";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
 
 export interface NotionContextProps {
   config: {
     apiKey: string;
     boardId: string;
   };
-  setConfig: (config: { apiKey: string; boardId: string }) => void;
+  setConfig: (config: {
+    apiKey: string;
+    boardId: string;
+    bucketConfig: {
+      bucketName: string;
+      id: string;
+      secret: string;
+      url: string;
+      region: string;
+    };
+  }) => void;
   members: string[];
   setMembers: (members: string[]) => void;
   bugTitle: string;
@@ -34,14 +42,23 @@ export const NotionProvider = ({
   children,
   apiKey,
   boardId,
+  bucketConfig,
 }: {
   children: ReactNode;
   apiKey: string;
   boardId: string;
+  bucketConfig: {
+    bucketName: string;
+    id: string;
+    secret: string;
+    url: string;
+    region: string;
+  };
 }) => {
   const [config, setConfig] = useState({
     apiKey,
     boardId,
+    bucketConfig,
   });
   const [members, setMembers] = useState<string[]>([]);
   const [bugTitle, setBugTitle] = useState("");

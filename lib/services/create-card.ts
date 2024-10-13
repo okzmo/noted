@@ -1,11 +1,28 @@
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { captureArea } from "../utils/capture-area";
+import { randomId } from "../utils/random-id";
+
 interface CreateCardProps {
   config: {
     apiKey: string;
     boardId: string;
+    bucketConfig: {
+      bucketName: string;
+      id: string;
+      secret: string;
+      url: string;
+      region: string;
+    };
   };
   card_title: string;
   card_description: string;
   assignees: string[];
+  selectionCoords: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
 }
 
 export const CreateACard = async ({
@@ -13,9 +30,32 @@ export const CreateACard = async ({
   card_title,
   card_description,
   assignees,
+  selectionCoords,
 }: CreateCardProps) => {
-  console.log(assignees);
+  const s3 = new S3Client({
+    endpoint: config.bucketConfig.url,
+    region: config.bucketConfig.region,
+    credentials: {
+      accessKeyId: config.bucketConfig.id,
+      secretAccessKey: config.bucketConfig.secret,
+    },
+  });
+
   try {
+    const imageBlob = await captureArea(selectionCoords);
+
+    const fileName = `${randomId()}.png`;
+
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: config.bucketConfig.bucketName,
+        Key: fileName,
+        Body: imageBlob,
+        ContentType: "image/png",
+      }),
+    );
+    const imageUrl = `https://f003.backblazeb2.com/file/${config.bucketConfig.bucketName}/${fileName}`;
+
     const res = await fetch("/notedtool-api/v1/pages", {
       method: "POST",
       headers: {
@@ -54,6 +94,16 @@ export const CreateACard = async ({
                   },
                 },
               ],
+            },
+          },
+          {
+            object: "block",
+            type: "image",
+            image: {
+              type: "external",
+              external: {
+                url: imageUrl,
+              },
             },
           },
         ],

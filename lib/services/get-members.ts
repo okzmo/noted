@@ -6,7 +6,6 @@ interface GetMembersProps {
 }
 
 export const GetMembers = async ({ config }: GetMembersProps) => {
-  console.log("called");
   try {
     const res = await fetch("/notedtool-api/v1/users", {
       method: "GET",
@@ -24,7 +23,6 @@ export const GetMembers = async ({ config }: GetMembersProps) => {
       throw new Error("Failed to fetch members");
     }
 
-    console.log(data);
     return data;
   } catch (error) {
     console.error(error);
