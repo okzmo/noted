@@ -5,21 +5,11 @@ export interface NotionContextProps {
     apiKey: string;
     boardId: string;
   };
-  setConfig: (config: {
-    apiKey: string;
-    boardId: string;
-    bucketConfig: {
-      bucketName: string;
-      id: string;
-      secret: string;
-      url: string;
-      region: string;
-    };
-  }) => void;
+  setConfig: (config: { apiKey: string; boardId: string }) => void;
   members: string[];
   setMembers: (members: string[]) => void;
-  bugTitle: string;
-  setBugTitle: (bugTitle: string) => void;
+  bugTitle: string | null;
+  setBugTitle: (bugTitle: string | null) => void;
   bugDescription: string;
   setBugDescription: (bugDescription: string) => void;
 }
@@ -42,26 +32,17 @@ export const NotionProvider = ({
   children,
   apiKey,
   boardId,
-  bucketConfig,
 }: {
   children: ReactNode;
   apiKey: string;
   boardId: string;
-  bucketConfig: {
-    bucketName: string;
-    id: string;
-    secret: string;
-    url: string;
-    region: string;
-  };
 }) => {
   const [config, setConfig] = useState({
     apiKey,
     boardId,
-    bucketConfig,
   });
   const [members, setMembers] = useState<string[]>([]);
-  const [bugTitle, setBugTitle] = useState("");
+  const [bugTitle, setBugTitle] = useState<string | null>(null);
   const [bugDescription, setBugDescription] = useState("");
 
   return (

@@ -1,26 +1,41 @@
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
-import { useSelection } from "../../hooks/useSelection";
 import styles from "./InputWrapper.module.css";
+import { useNotion } from "../../hooks/useNotion";
 
 export const InputWrapper = ({ children }: { children: ReactNode }) => {
-  const { selectionInfos } = useSelection();
+  const { bugTitle } = useNotion();
   return (
     <motion.div
-      initial={{ width: "250px" }}
-      animate={{
-        width: selectionInfos.hasTitle
-          ? "450px"
-          : selectionInfos.selectionEnded
-            ? "350px"
-            : "250px",
-        height: selectionInfos.hasTitle ? "300px" : "48px",
+      initial={{
+        width: "350px",
+        y: 5,
+        opacity: 0,
+        x: "-50%",
       }}
-      transition={{
-        type: "spring",
-        damping: 18,
-        stiffness: 150,
-        delay: selectionInfos.hasTitle ? 0.1 : 0,
+      animate={{
+        y: 0,
+        x: "-50%",
+        opacity: 1,
+        width: bugTitle ? "450px" : "350px",
+        height: bugTitle ? "300px" : "48px",
+        transition: {
+          type: "spring",
+          damping: 18,
+          stiffness: 150,
+          delay: bugTitle ? 0.1 : 0,
+        },
+      }}
+      exit={{
+        y: 5,
+        x: "-50%",
+        opacity: 0,
+        transition: {
+          type: "spring",
+          damping: 18,
+          stiffness: 150,
+          delay: 0.1,
+        },
       }}
       className={styles.inputWrapper}
     >

@@ -34,7 +34,15 @@ export const notionInputsVariants = {
     x: "-50%",
     transition: {
       ease: "easeOut",
-      delay: 0.7,
+      delay: 0.5,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: "-50%",
+    transition: {
+      ease: "easeOut",
+      delay: 0,
     },
   },
 };
