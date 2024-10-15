@@ -16,7 +16,7 @@ interface CreateCardProps {
   };
   card_title: string;
   card_description: string;
-  assignees: string[];
+  assignees: { id: string; object: string }[];
   selectionCoords: {
     x: number;
     y: number;

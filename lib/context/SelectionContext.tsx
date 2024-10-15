@@ -1,3 +1,4 @@
+import { useNotion } from "../hooks/useNotion";
 import { createContext, ReactNode, useCallback, useRef, useState } from "react";
 
 export interface SelectionContextProps {
@@ -47,6 +48,7 @@ export const SelectionProvider = ({ children }: { children: ReactNode }) => {
   const [visible, setVisible] = useState(false);
   const [moving, setMoving] = useState(false);
   const [selecting, setSelecting] = useState(false);
+  const { setAssignees } = useNotion();
   const [moveOffset, setMoveOffset] = useState({
     x: 0,
     y: 0,
@@ -173,6 +175,7 @@ export const SelectionProvider = ({ children }: { children: ReactNode }) => {
           resetSelection();
         } else {
           setVisible(false);
+          setAssignees([]);
           setKeys([]);
         }
         return;

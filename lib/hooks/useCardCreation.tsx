@@ -4,7 +4,8 @@ import { useNotion } from "./useNotion";
 import { CreateACard } from "../services/create-card";
 
 export const useCardCreation = () => {
-  const { config, bugTitle, bugDescription, members } = useNotion();
+  const { config, bugTitle, bugDescription, assignees, setAssignees } =
+    useNotion();
   const { resetSelection, setVisible, selectionInfos } = useSelection();
 
   return useMutation({
@@ -12,13 +13,18 @@ export const useCardCreation = () => {
     mutationFn: async () => {
       resetSelection();
       setVisible(false);
+      const filteredAssignees = assignees.map((assignee) => ({
+        object: "user",
+        id: assignee.id,
+      }));
+      setAssignees([]);
       let res;
       setTimeout(async () => {
         res = await CreateACard({
           config,
           card_title: bugTitle,
           card_description: bugDescription,
-          assignees: members,
+          assignees: filteredAssignees,
           selectionCoords: {
             x: selectionInfos.x,
             y: selectionInfos.y,
@@ -28,9 +34,6 @@ export const useCardCreation = () => {
         });
       }, 50);
       return res;
-    },
-    onSuccess: () => {
-      setVisible(false);
     },
   });
 };

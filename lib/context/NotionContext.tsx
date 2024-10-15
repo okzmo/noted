@@ -1,5 +1,11 @@
 import { createContext, ReactNode, useState } from "react";
 
+export interface Member {
+  object: "user";
+  id: string;
+  name: string;
+}
+
 export interface NotionContextProps {
   config: {
     apiKey: string;
@@ -16,8 +22,10 @@ export interface NotionContextProps {
       region: string;
     };
   }) => void;
-  members: string[];
-  setMembers: (members: string[]) => void;
+  members: Member[];
+  setMembers: (members: Member[]) => void;
+  assignees: Member[];
+  setAssignees: (assignees: Member[]) => void;
   bugTitle: string;
   setBugTitle: (bugTitle: string) => void;
   bugDescription: string;
@@ -32,6 +40,8 @@ export const NotionContext = createContext<NotionContextProps>({
   setConfig: () => {},
   members: [],
   setMembers: () => {},
+  assignees: [],
+  setAssignees: () => {},
   bugTitle: "",
   setBugTitle: () => {},
   bugDescription: "",
@@ -60,7 +70,8 @@ export const NotionProvider = ({
     boardId,
     bucketConfig,
   });
-  const [members, setMembers] = useState<string[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [assignees, setAssignees] = useState<Member[]>([]);
   const [bugTitle, setBugTitle] = useState("");
   const [bugDescription, setBugDescription] = useState("");
 
@@ -71,6 +82,8 @@ export const NotionProvider = ({
         setConfig,
         members,
         setMembers,
+        assignees,
+        setAssignees,
         bugTitle,
         setBugTitle,
         bugDescription,

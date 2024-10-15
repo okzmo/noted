@@ -9,7 +9,7 @@ export const selectTextVariants = {
     transition: {
       ease: "easeOut",
       duration: 0.1,
-      delay: 0.3,
+      delay: 0.1,
     },
   },
   exit: {

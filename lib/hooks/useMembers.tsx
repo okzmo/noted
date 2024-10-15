@@ -9,11 +9,7 @@ export const useMembers = () => {
     queryKey: ["members"],
     queryFn: async () => {
       const data = await GetMembers({ config });
-      setMembers(
-        data.results
-          .filter((member) => member.type === "person")
-          .map((member) => ({ object: "user", id: member.id })),
-      );
+      setMembers(data.results.filter((member) => member.type === "person"));
       return data;
     },
   });

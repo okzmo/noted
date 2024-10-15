@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useSelection } from "../../hooks/useSelection";
 import styles from "./SelectionOverlay.module.css";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 
 export const SelectionOverlay = () => {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -21,7 +22,6 @@ export const SelectionOverlay = () => {
     const controller = new AbortController();
 
     if (overlayRef.current) {
-      console.log("adding listeners");
       overlayRef.current.addEventListener("mousedown", handleMouseDown, {
         signal: controller.signal,
       });
@@ -55,9 +55,16 @@ export const SelectionOverlay = () => {
   ]);
 
   return (
-    <div
+    <motion.div
       ref={overlayRef}
       className={clsx(styles.backdrop, visible && styles.open)}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{
+        easing: "easeOut",
+        duration: 0.1,
+      }}
     >
       <div
         className={clsx(
@@ -81,6 +88,6 @@ export const SelectionOverlay = () => {
         selectionInfos.height === 0 && (
           <p className={styles.title}>SELECT A ZONE</p>
         )}
-    </div>
+    </motion.div>
   );
 };
