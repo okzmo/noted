@@ -16,14 +16,23 @@ export default defineConfig({
     },
   },
   build: {
+    sourcemap: true,
     emptyOutDir: false,
     copyPublicDir: false,
     lib: {
+      name: "noted-react",
       entry: resolve(__dirname, "lib/main.ts"),
-      formats: ["es"],
+      fileName: (format) => `noted-react.${format}.js`,
+      formats: ["es", "umd"],
     },
     rollupOptions: {
       external: ["react", "react-dom"],
+      output: {
+        globals: {
+          react: "React",
+          "react-dom": "ReactDOM",
+        },
+      },
     },
   },
 });

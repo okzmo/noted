@@ -19,6 +19,7 @@
     "outDir": "./dist", // Specify an output folder for all emitted files.
     "declaration": true, // Generate .d.ts files from TypeScript and JavaScript files in your project.
     "emitDeclarationOnly": true, // Only output d.ts files and not JavaScript files
+    "declarationDir": "./dist",
     "isolatedModules": true, // <--- Setting to `true` tells TypeScript to warn you if you write certain code that can't be correctly interpreted by a single-file transpilation process. Ensure that each file can be safely transpiled without relying on other imports.
     "esModuleInterop": true, // Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.
     "allowSyntheticDefaultImports": true, // Allow 'import x from y' when a module doesn't have a default export.

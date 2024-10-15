@@ -1,15 +1,23 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, Dispatch, ReactNode, useState } from "react";
 
 export interface Member {
   object: "user";
   id: string;
   name: string;
+  type: string;
 }
 
 export interface NotionContextProps {
   config: {
     apiKey: string;
     boardId: string;
+    bucketConfig: {
+      bucketName: string;
+      id: string;
+      secret: string;
+      url: string;
+      region: string;
+    };
   };
   setConfig: (config: {
     apiKey: string;
@@ -23,9 +31,9 @@ export interface NotionContextProps {
     };
   }) => void;
   members: Member[];
-  setMembers: (members: Member[]) => void;
+  setMembers: Dispatch<React.SetStateAction<Member[]>>;
   assignees: Member[];
-  setAssignees: (assignees: Member[]) => void;
+  setAssignees: Dispatch<React.SetStateAction<Member[]>>;
   bugTitle: string;
   setBugTitle: (bugTitle: string) => void;
   bugDescription: string;
@@ -36,6 +44,13 @@ export const NotionContext = createContext<NotionContextProps>({
   config: {
     apiKey: "",
     boardId: "",
+    bucketConfig: {
+      bucketName: "",
+      id: "",
+      secret: "",
+      url: "",
+      region: "",
+    },
   },
   setConfig: () => {},
   members: [],

@@ -1,4 +1,5 @@
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
+
 export const captureArea = async (selectionCoords: {
   x: number;
   y: number;
@@ -11,14 +12,13 @@ export const captureArea = async (selectionCoords: {
   const canvas = await html2canvas(document.body, {
     useCORS: true,
     scale: dpr * 2,
-    logging: true,
     width: document.documentElement.scrollWidth,
     height: document.documentElement.scrollHeight,
     allowTaint: true,
     foreignObjectRendering: true,
     x: window.scrollX,
     y: window.scrollY,
-    imageTimeout: 0, // No timeout for image loading
+    backgroundColor: getBackgroundColor(),
   });
 
   const croppedCanvas = document.createElement("canvas");
@@ -33,7 +33,7 @@ export const captureArea = async (selectionCoords: {
 
   croppedCanvas.width = width;
   croppedCanvas.height = height;
-  croppedContext?.putImageData(imageData, 0, 0);
+  croppedContext?.putImageData(imageData!, 0, 0);
 
   return new Promise<Blob>((resolve) => {
     croppedCanvas.toBlob(
@@ -49,3 +49,25 @@ export const captureArea = async (selectionCoords: {
     );
   });
 };
+
+function getBackgroundColor(): string {
+  const bodyColor = getComputedStyle(document.body).backgroundColor;
+  const rootColor = getComputedStyle(document.documentElement).backgroundColor;
+
+  const isTransparent = (color: string) => {
+    const rgba = color.match(
+      /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/,
+    );
+    return rgba && (rgba[4] === "0" || rgba[4] === "0.0");
+  };
+
+  if (bodyColor && !isTransparent(bodyColor)) {
+    return bodyColor;
+  }
+
+  if (rootColor && !isTransparent(rootColor)) {
+    return rootColor;
+  }
+
+  return "#ffffff";
+}

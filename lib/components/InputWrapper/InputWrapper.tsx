@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { useSelection } from "../../hooks/useSelection";
 import styles from "./InputWrapper.module.css";
+import clsx from "clsx";
 
 export const InputWrapper = ({ children }: { children: ReactNode }) => {
   const { selectionInfos } = useSelection();
@@ -41,7 +42,8 @@ export const InputWrapper = ({ children }: { children: ReactNode }) => {
           delay: 0.1,
         },
       }}
-      className={styles.inputWrapper}
+      className={clsx(styles.inputWrapper)}
+      data-html2canvas-ignore
     >
       {children}
     </motion.div>

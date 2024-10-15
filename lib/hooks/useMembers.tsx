@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNotion } from "./useNotion";
 import { GetMembers } from "../services/get-members";
+import { Member } from "../context/NotionContext";
 
 export const useMembers = () => {
-  const { config, setMembers } = useNotion();
+  const { config } = useNotion();
 
   return useQuery({
     queryKey: ["members"],
     queryFn: async () => {
       const data = await GetMembers({ config });
-      setMembers(data.results.filter((member) => member.type === "person"));
-      return data;
+      return data.results.filter((member: Member) => member.type === "person");
     },
   });
 };

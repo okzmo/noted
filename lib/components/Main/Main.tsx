@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { KeyboardEventHandler, useEffect, useState } from "react";
 import styles from "./Main.module.css";
 import { useSelection } from "../../hooks/useSelection";
 import { AnimatePresence, motion } from "framer-motion";
@@ -14,12 +14,17 @@ import { useMembers } from "../../hooks/useMembers";
 import { useCardCreation } from "../../hooks/useCardCreation";
 
 export const Main = () => {
-  const { members, assignees, setAssignees, setBugTitle, setBugDescription } =
-    useNotion();
+  const {
+    members,
+    setMembers,
+    assignees,
+    setAssignees,
+    setBugTitle,
+    setBugDescription,
+  } = useNotion();
   const [memberQuery, setMemberQuery] = useState("");
-  const { isLoading } = useMembers();
+  const { data: membersData } = useMembers();
   const { mutate, isPending } = useCardCreation();
-
   const {
     handleKeyDown,
     goToDescriptionStep,
@@ -28,7 +33,9 @@ export const Main = () => {
     visible,
   } = useSelection();
 
-  const handleGoToNextStep = (event: KeyboardEvent) => {
+  const handleGoToNextStep: KeyboardEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
     if (event.key === "Enter") {
       event.preventDefault();
       goToDescriptionStep();
@@ -36,7 +43,9 @@ export const Main = () => {
     }
   };
 
-  const handleCreateCard = (event: KeyboardEvent) => {
+  const handleCreateCard: KeyboardEventHandler<HTMLTextAreaElement> = (
+    event,
+  ) => {
     if (event.key === "Enter") {
       event.preventDefault();
       setBugDescription((event.target as HTMLTextAreaElement).value);
@@ -44,7 +53,9 @@ export const Main = () => {
     }
   };
 
-  const handleAssignMember = (event: KeyboardEvent) => {
+  const handleAssignMember: KeyboardEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
     if (event.key === "Tab") {
       event.preventDefault();
       const member = members.find((member) =>
@@ -59,6 +70,10 @@ export const Main = () => {
       setAssignees((prevAssignees) => prevAssignees.slice(0, -1));
     }
   };
+
+  useEffect(() => {
+    setMembers(membersData);
+  }, [membersData, setMembers]);
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);

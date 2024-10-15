@@ -57,6 +57,7 @@ export const SelectionOverlay = () => {
   return (
     <motion.div
       ref={overlayRef}
+      data-html2canvas-ignore
       className={clsx(styles.backdrop, visible && styles.open)}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
