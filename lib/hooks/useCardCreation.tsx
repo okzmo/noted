@@ -18,7 +18,8 @@ export const useCardCreation = () => {
         width: selectionInfos.width,
         height: selectionInfos.height,
       };
-      const blob = await captureArea(selectionCoords);
+
+      const blob = (await captureArea(selectionCoords)) as Blob;
       resetSelection();
 
       const filteredAssignees = assignees.map((assignee) => ({

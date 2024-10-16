@@ -7,7 +7,7 @@ interface GetMembersProps {
 
 export const GetMembers = async ({ config }: GetMembersProps) => {
   try {
-    const res = await fetch("/notedtool-api/v1/users", {
+    const res = await fetch("/api/notion/v1/users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

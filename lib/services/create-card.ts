@@ -1,5 +1,4 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { captureArea } from "../utils/capture-area";
 import { randomId } from "../utils/random-id";
 
 interface CreateCardProps {
@@ -49,7 +48,7 @@ export const CreateACard = async ({
     );
     const imageUrl = `https://f003.backblazeb2.com/file/${config.bucketConfig.bucketName}/${fileName}`;
 
-    const res = await fetch("/notedtool-api/v1/pages", {
+    const res = await fetch("/api/notion/v1/pages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

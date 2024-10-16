@@ -8,10 +8,10 @@ export default defineConfig({
   plugins: [react(), libInjectCss()],
   server: {
     proxy: {
-      "/notedtool-api": {
+      "/api/notion": {
         target: "https://api.notion.com",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/notedtool-api/, ""),
+        rewrite: (path) => path.replace(/^\/api\/notion/, ""),
       },
     },
   },

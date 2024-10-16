@@ -6,7 +6,7 @@ export const captureArea = async (selectionCoords: {
   y: number;
   width: number;
   height: number;
-}) => {
+}): Promise<Blob | Error> => {
   try {
     const dpr = window.devicePixelRatio || 1;
 
@@ -48,6 +48,6 @@ export const captureArea = async (selectionCoords: {
       worker.postMessage({ selectionCoords, dataUrl, dpr });
     });
   } catch (error) {
-    return error;
+    return error as Error;
   }
 };
