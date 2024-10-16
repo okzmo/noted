@@ -86,7 +86,7 @@ export const Main = () => {
   return (
     <AnimatePresence mode="wait">
       {visible && (
-        <>
+        <div className={styles.mainWrapper}>
           <SelectionOverlay />
 
           {selectionInfos.hasTitle && (
@@ -171,7 +171,7 @@ export const Main = () => {
               )}
             </AnimatePresence>
           </InputWrapper>
-        </>
+        </div>
       )}
     </AnimatePresence>
   );

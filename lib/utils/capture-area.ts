@@ -1,53 +1,53 @@
 import { toPng } from "html-to-image";
-import { createWorker } from "./worker";
 
-export const captureArea = async (selectionCoords: {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}): Promise<Blob | Error> => {
-  try {
-    const dpr = window.devicePixelRatio || 1;
+export const captureArea = async () => {
+  const dpr = window.devicePixelRatio || 1;
 
-    const filter = (node: HTMLElement) => {
-      if (node.hasAttribute) {
-        return !node.hasAttribute("data-ignore-screenshot");
-      }
+  const filter = (node: HTMLElement) => {
+    if (node.hasAttribute) {
+      return !node.hasAttribute("data-ignore-screenshot");
+    }
+    return true;
+  };
 
-      return true;
-    };
+  const dataUrl = await toPng(document.body, {
+    quality: 0.9,
+    pixelRatio: dpr * 1.5,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    backgroundColor: getBackgroundColor(),
+    filter: filter,
+    style: {
+      transform: `translateY(-${window.scrollY}px)`,
+      width: `${document.body.scrollWidth}px`,
+      height: `${document.body.scrollHeight}px`,
+    },
+  });
 
-    const dataUrl = await toPng(document.body, {
-      pixelRatio: dpr * 1.5,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      filter: filter,
-    });
-
-    const worker = createWorker();
-
-    return new Promise<Blob>((resolve, reject) => {
-      worker!.onmessage = (event) => {
-        if (event.data.error) {
-          reject(new Error(event.data.error));
-        } else if (event.data.arrayBuffer) {
-          const blob = new Blob([event.data.arrayBuffer], {
-            type: "image/png",
-          });
-          resolve(blob);
-        } else {
-          reject(new Error("Unexpected message from worker"));
-        }
-      };
-
-      worker.onerror = (error) => {
-        reject(error);
-      };
-
-      worker.postMessage({ selectionCoords, dataUrl, dpr });
-    });
-  } catch (error) {
-    return error as Error;
-  }
+  return {
+    dataUrl: dataUrl,
+    dpr: dpr,
+  };
 };
+
+function getBackgroundColor(): string {
+  const bodyColor = getComputedStyle(document.body).backgroundColor;
+  const rootColor = getComputedStyle(document.documentElement).backgroundColor;
+
+  const isTransparent = (color: string) => {
+    const rgba = color.match(
+      /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/,
+    );
+    return rgba && (rgba[4] === "0" || rgba[4] === "0.0");
+  };
+
+  if (bodyColor && !isTransparent(bodyColor)) {
+    return bodyColor;
+  }
+
+  if (rootColor && !isTransparent(rootColor)) {
+    return rootColor;
+  }
+
+  return "#ffffff";
+}

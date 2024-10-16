@@ -19,7 +19,7 @@ export const useCardCreation = () => {
         height: selectionInfos.height,
       };
 
-      const blob = (await captureArea(selectionCoords)) as Blob;
+      const { dataUrl, dpr } = await captureArea();
       resetSelection();
 
       const filteredAssignees = assignees.map((assignee) => ({
@@ -31,7 +31,9 @@ export const useCardCreation = () => {
         card_title: bugTitle,
         card_description: bugDescription,
         assignees: filteredAssignees,
-        blob: blob,
+        selectionCoords,
+        dataUrl: dataUrl,
+        dpr: dpr,
       });
       return res;
     },

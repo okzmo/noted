@@ -11,25 +11,8 @@ export interface NotionContextProps {
   config: {
     apiKey: string;
     boardId: string;
-    bucketConfig: {
-      bucketName: string;
-      id: string;
-      secret: string;
-      url: string;
-      region: string;
-    };
   };
-  setConfig: (config: {
-    apiKey: string;
-    boardId: string;
-    bucketConfig: {
-      bucketName: string;
-      id: string;
-      secret: string;
-      url: string;
-      region: string;
-    };
-  }) => void;
+  setConfig: (config: { apiKey: string; boardId: string }) => void;
   members: Member[];
   setMembers: Dispatch<React.SetStateAction<Member[]>>;
   assignees: Member[];
@@ -44,13 +27,6 @@ export const NotionContext = createContext<NotionContextProps>({
   config: {
     apiKey: "",
     boardId: "",
-    bucketConfig: {
-      bucketName: "",
-      id: "",
-      secret: "",
-      url: "",
-      region: "",
-    },
   },
   setConfig: () => {},
   members: [],
@@ -67,23 +43,14 @@ export const NotionProvider = ({
   children,
   apiKey,
   boardId,
-  bucketConfig,
 }: {
   children: ReactNode;
   apiKey: string;
   boardId: string;
-  bucketConfig: {
-    bucketName: string;
-    id: string;
-    secret: string;
-    url: string;
-    region: string;
-  };
 }) => {
   const [config, setConfig] = useState({
     apiKey,
     boardId,
-    bucketConfig,
   });
   const [members, setMembers] = useState<Member[]>([]);
   const [assignees, setAssignees] = useState<Member[]>([]);
