@@ -1,4 +1,5 @@
-import html2canvas from "html2canvas-pro";
+import { toPng } from "html-to-image";
+import { createWorker } from "./worker";
 
 export const captureArea = async (selectionCoords: {
   x: number;
@@ -6,68 +7,47 @@ export const captureArea = async (selectionCoords: {
   width: number;
   height: number;
 }) => {
-  const dpr = window.devicePixelRatio || 1;
+  try {
+    const dpr = window.devicePixelRatio || 1;
 
-  // Capture the entire viewport
-  const canvas = await html2canvas(document.body, {
-    useCORS: true,
-    scale: dpr * 2,
-    width: document.documentElement.scrollWidth,
-    height: document.documentElement.scrollHeight,
-    allowTaint: true,
-    foreignObjectRendering: true,
-    x: window.scrollX,
-    y: window.scrollY,
-    backgroundColor: getBackgroundColor(),
-  });
+    const filter = (node: HTMLElement) => {
+      if (node.hasAttribute) {
+        return !node.hasAttribute("data-ignore-screenshot");
+      }
 
-  const croppedCanvas = document.createElement("canvas");
-  const croppedContext = croppedCanvas.getContext("2d");
+      return true;
+    };
 
-  const x = Math.round(selectionCoords.x * dpr * 2) + 16;
-  const y = Math.round(selectionCoords.y * dpr * 2) + 16;
-  const width = Math.round(selectionCoords.width * dpr * 2);
-  const height = Math.round(selectionCoords.height * dpr * 2);
+    const dataUrl = await toPng(document.body, {
+      pixelRatio: dpr * 1.5,
+      width: window.innerWidth,
+      height: window.innerHeight,
+      filter: filter,
+    });
 
-  const imageData = canvas.getContext("2d")?.getImageData(x, y, width, height);
+    const worker = createWorker();
 
-  croppedCanvas.width = width;
-  croppedCanvas.height = height;
-  croppedContext?.putImageData(imageData!, 0, 0);
-
-  return new Promise<Blob>((resolve) => {
-    croppedCanvas.toBlob(
-      (blob) => {
-        if (blob) {
+    return new Promise<Blob>((resolve, reject) => {
+      worker!.onmessage = (event) => {
+        if (event.data.error) {
+          reject(new Error(event.data.error));
+        } else if (event.data.arrayBuffer) {
+          const blob = new Blob([event.data.arrayBuffer], {
+            type: "image/png",
+          });
           resolve(blob);
         } else {
-          throw new Error("Failed to create blob from canvas");
+          reject(new Error("Unexpected message from worker"));
         }
-      },
-      "image/png",
-      1.0,
-    );
-  });
+      };
+
+      worker.onerror = (error) => {
+        reject(error);
+      };
+
+      worker.postMessage({ selectionCoords, dataUrl, dpr });
+    });
+  } catch (error) {
+    return error;
+  }
 };
-
-function getBackgroundColor(): string {
-  const bodyColor = getComputedStyle(document.body).backgroundColor;
-  const rootColor = getComputedStyle(document.documentElement).backgroundColor;
-
-  const isTransparent = (color: string) => {
-    const rgba = color.match(
-      /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/,
-    );
-    return rgba && (rgba[4] === "0" || rgba[4] === "0.0");
-  };
-
-  if (bodyColor && !isTransparent(bodyColor)) {
-    return bodyColor;
-  }
-
-  if (rootColor && !isTransparent(rootColor)) {
-    return rootColor;
-  }
-
-  return "#ffffff";
-}

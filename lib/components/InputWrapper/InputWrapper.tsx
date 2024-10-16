@@ -43,7 +43,7 @@ export const InputWrapper = ({ children }: { children: ReactNode }) => {
         },
       }}
       className={clsx(styles.inputWrapper)}
-      data-html2canvas-ignore
+      data-ignore-screenshot
     >
       {children}
     </motion.div>

@@ -19,7 +19,6 @@ export const GetMembers = async ({ config }: GetMembersProps) => {
     const data = await res.json();
 
     if (!res.ok) {
-      console.log(data);
       throw new Error("Failed to fetch members");
     }
 

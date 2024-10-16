@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSelection } from "./useSelection";
 import { useNotion } from "./useNotion";
 import { CreateACard } from "../services/create-card";
+import { captureArea } from "../utils/capture-area";
 
 export const useCardCreation = () => {
   const { config, bugTitle, bugDescription, assignees, setAssignees } =
@@ -11,7 +12,15 @@ export const useCardCreation = () => {
   return useMutation({
     mutationKey: ["create-card"],
     mutationFn: async () => {
+      const selectionCoords = {
+        x: selectionInfos.x,
+        y: selectionInfos.y,
+        width: selectionInfos.width,
+        height: selectionInfos.height,
+      };
+      const blob = await captureArea(selectionCoords);
       resetSelection();
+
       const filteredAssignees = assignees.map((assignee) => ({
         object: "user",
         id: assignee.id,
@@ -21,12 +30,7 @@ export const useCardCreation = () => {
         card_title: bugTitle,
         card_description: bugDescription,
         assignees: filteredAssignees,
-        selectionCoords: {
-          x: selectionInfos.x,
-          y: selectionInfos.y,
-          width: selectionInfos.width,
-          height: selectionInfos.height,
-        },
+        blob: blob,
       });
       return res;
     },

@@ -17,12 +17,7 @@ interface CreateCardProps {
   card_title: string;
   card_description: string;
   assignees: { id: string; object: string }[];
-  selectionCoords: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
+  blob: Blob;
 }
 
 export const CreateACard = async ({
@@ -30,7 +25,7 @@ export const CreateACard = async ({
   card_title,
   card_description,
   assignees,
-  selectionCoords,
+  blob,
 }: CreateCardProps) => {
   const s3 = new S3Client({
     endpoint: config.bucketConfig.url,
@@ -42,15 +37,13 @@ export const CreateACard = async ({
   });
 
   try {
-    const imageBlob = await captureArea(selectionCoords);
-
     const fileName = `${randomId()}.png`;
 
     await s3.send(
       new PutObjectCommand({
         Bucket: config.bucketConfig.bucketName,
         Key: fileName,
-        Body: imageBlob,
+        Body: blob,
         ContentType: "image/png",
       }),
     );
@@ -113,8 +106,6 @@ export const CreateACard = async ({
     const data = await res.json();
 
     if (!res.ok) {
-      console.log(data);
-      console.log(res);
       throw new Error("Failed to create card");
     }
 

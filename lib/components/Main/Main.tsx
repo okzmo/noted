@@ -99,6 +99,7 @@ export const Main = () => {
                 delay: 0.7,
               }}
               className={styles.inputsWrapper}
+              data-ignore-screenshot
             >
               <div className={styles.assign}>
                 {assignees.map((assignee, idx) => (
