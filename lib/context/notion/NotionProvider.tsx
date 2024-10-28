@@ -1,5 +1,5 @@
 import { NotionContext } from "./NotionContext";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 export const NotionProvider = ({
   children,
@@ -16,6 +16,11 @@ export const NotionProvider = ({
   });
   const [bugTitle, setBugTitle] = useState("");
   const [bugDescription, setBugDescription] = useState("");
+  const [name, setName] = useState<string | null>(null);
+
+  useEffect(() => {
+    setName(localStorage.getItem("ntd-name"));
+  }, []);
 
   return (
     <NotionContext.Provider
@@ -26,6 +31,8 @@ export const NotionProvider = ({
         setBugTitle,
         bugDescription,
         setBugDescription,
+        name,
+        setName,
       }}
     >
       {children}

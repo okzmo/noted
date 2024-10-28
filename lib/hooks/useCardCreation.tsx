@@ -5,7 +5,7 @@ import { CreateACard } from "../services/create-card";
 import { captureArea } from "../utils/capture-area";
 
 export const useCardCreation = () => {
-  const { config, bugTitle, bugDescription } =
+  const { config, bugTitle, bugDescription, name } =
     useNotion();
   const { resetSelection, setVisible, selectionInfos } = useSelection();
 
@@ -29,6 +29,7 @@ export const useCardCreation = () => {
         selectionCoords,
         dataUrl: dataUrl,
         dpr: dpr,
+        name: name!
       });
       return res;
     },

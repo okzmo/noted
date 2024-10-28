@@ -3,10 +3,12 @@ import { useSelection } from "../../hooks/useSelection";
 import styles from "./SelectionOverlay.module.css";
 import clsx from "clsx";
 import { motion } from "framer-motion";
+import { useNotion } from "../../hooks/useNotion";
 
 export const SelectionOverlay = () => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const resizeHandleRef = useRef<HTMLDivElement>(null);
+  const { name } = useNotion();
   const {
     handleKeyDown,
     handleMouseDown,
@@ -14,11 +16,11 @@ export const SelectionOverlay = () => {
     handleMouseMove,
     handleResizeMouseDown,
     selectionInfos,
-    selecting,
     visible,
   } = useSelection();
 
   useEffect(() => {
+    if (!name) return;
     const controller = new AbortController();
 
     if (overlayRef.current) {
@@ -47,6 +49,7 @@ export const SelectionOverlay = () => {
       controller.abort();
     };
   }, [
+    name,
     handleKeyDown,
     handleMouseDown,
     handleMouseMove,

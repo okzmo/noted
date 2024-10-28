@@ -13,6 +13,7 @@ interface CreateCardProps {
     width: number;
     height: number;
   };
+  name: string
 }
 
 export const CreateACard = async ({
@@ -22,6 +23,7 @@ export const CreateACard = async ({
   dataUrl,
   dpr,
   selectionCoords,
+  name,
 }: CreateCardProps) => {
   try {
     const formData = new FormData();
@@ -31,6 +33,8 @@ export const CreateACard = async ({
     formData.append("card_description", card_description);
     formData.append("selectionCoords", JSON.stringify(selectionCoords));
     formData.append("boardId", config.boardId);
+    formData.append("name", name);
+    formData.append("location", location.href + `?top=${selectionCoords.y - (window.innerHeight/2) + window.scrollY}`);
 
     const res = await fetch("http://localhost:8000/create-card", {
       method: "POST",

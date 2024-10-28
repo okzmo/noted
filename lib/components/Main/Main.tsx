@@ -15,6 +15,8 @@ export const Main = () => {
   const {
     setBugTitle,
     setBugDescription,
+    name,
+    setName,
   } = useNotion();
   const { mutate, isPending } = useCardCreation();
   const {
@@ -25,7 +27,17 @@ export const Main = () => {
     visible,
   } = useSelection();
 
-  const handleGoToNextStep: KeyboardEventHandler<HTMLInputElement> = (
+  const handleGoToSelect: KeyboardEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      setName((event.target as HTMLInputElement).value);
+      localStorage.setItem("ntd-name", (event.target as HTMLInputElement).value);
+    }
+  }
+
+  const handleGoToDescription: KeyboardEventHandler<HTMLInputElement> = (
     event,
   ) => {
     if (event.key === "Enter") {
@@ -61,7 +73,20 @@ export const Main = () => {
 
           <InputWrapper>
             <AnimatePresence mode="wait">
-              {!selectionInfos.selectionEnded && (
+              {!name && (
+                <motion.input
+                  key="title-input"
+                  variants={selectTextVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className={styles.titleInput}
+                  placeholder="Your name..."
+                  onKeyDown={handleGoToSelect}
+                />
+              )}
+
+              {(!selectionInfos.selectionEnded && name) && (
                 <motion.span
                   key="select"
                   variants={selectTextVariants}
@@ -87,7 +112,7 @@ export const Main = () => {
                   exit="exit"
                   className={styles.titleInput}
                   placeholder="Describe the bug..."
-                  onKeyDown={handleGoToNextStep}
+                  onKeyDown={handleGoToDescription}
                 />
               )}
 

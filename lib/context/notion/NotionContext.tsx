@@ -10,6 +10,8 @@ export interface NotionContextProps {
   setBugTitle: (bugTitle: string) => void;
   bugDescription: string;
   setBugDescription: (bugDescription: string) => void;
+  name: string | null;
+  setName: (name: string) => void;
 }
 
 export const NotionContext = createContext<NotionContextProps>({
@@ -22,4 +24,6 @@ export const NotionContext = createContext<NotionContextProps>({
   setBugTitle: () => {},
   bugDescription: "",
   setBugDescription: () => {},
+  name: null,
+  setName: () => {},
 });
