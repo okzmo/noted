@@ -1,6 +1,6 @@
-import { SelectionProvider } from "../../context/SelectionContext";
+import { SelectionProvider } from "../../context/selection/SelectionProvider";
 import { Main } from "../Main";
-import { NotionProvider } from "../../context/NotionContext";
+import { NotionProvider } from "../../context/notion/NotionProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const QueryClientInstance = new QueryClient();

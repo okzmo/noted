@@ -1,4 +1,4 @@
-import { NotionContext } from "../context/NotionContext";
+import { NotionContext } from "../context/notion/NotionContext";
 import { useContext } from "react";
 
 export const useNotion = () => {
