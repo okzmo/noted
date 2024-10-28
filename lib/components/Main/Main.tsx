@@ -1,29 +1,21 @@
-import { KeyboardEventHandler, useEffect, useState } from "react";
+import { KeyboardEventHandler, useEffect } from "react";
 import styles from "./Main.module.css";
 import { useSelection } from "../../hooks/useSelection";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  notionInputsVariants,
   selectTextVariants,
   textAreaVariants,
 } from "./Main.animations";
 import { SelectionOverlay } from "../SelectionOverlay/SelectionOverlay";
 import { useNotion } from "../../hooks/useNotion";
 import { InputWrapper } from "../InputWrapper";
-import { useMembers } from "../../hooks/useMembers";
 import { useCardCreation } from "../../hooks/useCardCreation";
 
 export const Main = () => {
   const {
-    members,
-    setMembers,
-    assignees,
-    setAssignees,
     setBugTitle,
     setBugDescription,
   } = useNotion();
-  const [memberQuery, setMemberQuery] = useState("");
-  const { data: membersData } = useMembers();
   const { mutate, isPending } = useCardCreation();
   const {
     handleKeyDown,
@@ -53,28 +45,6 @@ export const Main = () => {
     }
   };
 
-  const handleAssignMember: KeyboardEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      const member = members.find((member) =>
-        member.name.toLowerCase().startsWith(memberQuery.toLowerCase()),
-      );
-      if (member && !assignees.includes(member)) {
-        setAssignees((prevAssignees) => [...prevAssignees, member]);
-        setMemberQuery("");
-      }
-    } else if (event.key === "Backspace" && memberQuery === "") {
-      event.preventDefault();
-      setAssignees((prevAssignees) => prevAssignees.slice(0, -1));
-    }
-  };
-
-  useEffect(() => {
-    setMembers(membersData);
-  }, [membersData, setMembers]);
-
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
 
@@ -89,42 +59,6 @@ export const Main = () => {
         <div className={styles.mainWrapper}>
           <SelectionOverlay />
 
-          {selectionInfos.hasTitle && (
-            <motion.div
-              variants={notionInputsVariants}
-              initial="initial"
-              animate="animate"
-              transition={{
-                ease: "easeOut",
-                delay: 0.7,
-              }}
-              className={styles.inputsWrapper}
-              data-ignore-screenshot
-            >
-              <div className={styles.assign}>
-                {assignees.map((assignee, idx) => (
-                  <AssignedMember
-                    key={`assignee-${idx}`}
-                    name={assignee.name}
-                  />
-                ))}
-                <div className={styles.assignInputWrapper}>
-                  <input
-                    className={styles.assignInput}
-                    type="text"
-                    value={memberQuery}
-                    placeholder={
-                      assignees.length > 0
-                        ? "Assign more members..."
-                        : "Assign members..."
-                    }
-                    onChange={(event) => setMemberQuery(event.target.value)}
-                    onKeyDown={handleAssignMember}
-                  />
-                </div>
-              </div>
-            </motion.div>
-          )}
           <InputWrapper>
             <AnimatePresence mode="wait">
               {!selectionInfos.selectionEnded && (
@@ -177,6 +111,3 @@ export const Main = () => {
   );
 };
 
-const AssignedMember = ({ name }: { name: string }) => {
-  return <div className={styles.assignedMember}>{name}</div>;
-};

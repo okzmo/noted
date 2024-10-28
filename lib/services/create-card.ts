@@ -5,7 +5,6 @@ interface CreateCardProps {
   };
   card_title: string;
   card_description: string;
-  assignees: { id: string; object: string }[];
   dataUrl: string;
   dpr: number;
   selectionCoords: {
@@ -20,7 +19,6 @@ export const CreateACard = async ({
   config,
   card_title,
   card_description,
-  assignees,
   dataUrl,
   dpr,
   selectionCoords,
@@ -31,7 +29,6 @@ export const CreateACard = async ({
     formData.append("dpr", dpr.toString());
     formData.append("card_title", card_title);
     formData.append("card_description", card_description);
-    formData.append("assignees", JSON.stringify(assignees));
     formData.append("selectionCoords", JSON.stringify(selectionCoords));
     formData.append("boardId", config.boardId);
 

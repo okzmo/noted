@@ -84,11 +84,6 @@ export const SelectionOverlay = () => {
           <span ref={resizeHandleRef} className={styles.resizeHandle} />
         )}
       </div>
-      {!selecting &&
-        selectionInfos.width === 0 &&
-        selectionInfos.height === 0 && (
-          <p className={styles.title}>SELECT A ZONE</p>
-        )}
     </motion.div>
   );
 };

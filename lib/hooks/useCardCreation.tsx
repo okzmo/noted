@@ -5,7 +5,7 @@ import { CreateACard } from "../services/create-card";
 import { captureArea } from "../utils/capture-area";
 
 export const useCardCreation = () => {
-  const { config, bugTitle, bugDescription, assignees, setAssignees } =
+  const { config, bugTitle, bugDescription } =
     useNotion();
   const { resetSelection, setVisible, selectionInfos } = useSelection();
 
@@ -22,15 +22,10 @@ export const useCardCreation = () => {
       const { dataUrl, dpr } = await captureArea();
       resetSelection();
 
-      const filteredAssignees = assignees.map((assignee) => ({
-        object: "user",
-        id: assignee.id,
-      }));
       const res = await CreateACard({
         config,
         card_title: bugTitle,
         card_description: bugDescription,
-        assignees: filteredAssignees,
         selectionCoords,
         dataUrl: dataUrl,
         dpr: dpr,
@@ -39,7 +34,6 @@ export const useCardCreation = () => {
     },
     onSuccess: () => {
       setVisible(false);
-      setAssignees([]);
     },
   });
 };
