@@ -1,12 +1,12 @@
-.inputWrapper {
+.input {
   display: flex;
   width: 250px;
   height: 48px;
   position: fixed;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   bottom: 20px;
+  z-index: 9999;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 12px;
@@ -23,16 +23,71 @@
     background-color 75ms ease-out;
 }
 
-.inputWrapper:hover {
+.input:hover:not(:has(.inboxButton:hover)) {
   background-color: #18181b;
   box-shadow:
     inset 0px 1px 0px #36363c,
     inset 0px 0px 0px 1px #27272b;
 }
 
-.inputWrapper:has(.input:focus) {
+.input:has(.input:focus) {
   background-color: #18181b;
   box-shadow:
     inset 0px 1px 0px #36363c,
     inset 0px 0px 0px 1px #27272b;
+}
+
+.inboxButton {
+  z-index: 10;
+  position: fixed;
+  padding: 0;
+  height: 48px;
+  width: 48px;
+  right: calc(-48px - 10px);
+  bottom: -1px;
+  background-color: #121215;
+  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 1);
+  box-shadow:
+    inset 0px 1px 0px #2d2d33,
+    inset 0px 0px 0px 1px #202024;
+  border-radius: 12px;
+  transition:
+    box-shadow 75ms ease-out,
+    background-color 75ms ease-out;
+}
+
+.inboxButton:hover {
+  background-color: #18181b !important;
+  border: 1px solid rgba(0, 0, 0, 1);
+  box-shadow:
+    inset 0px 1px 0px #36363c,
+    inset 0px 0px 0px 1px #27272b;
+}
+
+.inboxButton:focus {
+  border: 1px solid rgba(0, 0, 0, 1);
+  background-color: #18181b !important;
+  outline: none !important;
+  box-shadow:
+    inset 0px 1px 0px #36363c,
+    inset 0px 0px 0px 1px #27272b;
+}
+
+.inboxButton:focus-visible {
+  border: 1px solid rgba(0, 0, 0, 1);
+  background-color: #18181b !important;
+  outline: none !important;
+  box-shadow:
+    inset 0px 1px 0px #36363c,
+    inset 0px 0px 0px 1px #27272b;
+}
+
+.inboxIcon {
+  color: rgba(255, 255, 255, 0.3);
+  transition: color 75ms ease-out;
+}
+
+.inboxButton:hover .inboxIcon {
+  color: rgba(255, 255, 255, 1);
 }

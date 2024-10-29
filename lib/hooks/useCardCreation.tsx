@@ -1,10 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelection } from "./useSelection";
 import { useNotion } from "./useNotion";
 import { CreateACard } from "../services/create-card";
 import { captureArea } from "../utils/capture-area";
 
+
 export const useCardCreation = () => {
+  const queryClient = useQueryClient();
   const { config, bugTitle, bugDescription, name } =
     useNotion();
   const { resetSelection, setVisible, selectionInfos } = useSelection();
@@ -34,6 +36,7 @@ export const useCardCreation = () => {
       return res;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notion-cards"] });
       setVisible(false);
     },
   });

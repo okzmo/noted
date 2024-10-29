@@ -10,6 +10,8 @@ import { SelectionOverlay } from "../SelectionOverlay/SelectionOverlay";
 import { useNotion } from "../../hooks/useNotion";
 import { InputWrapper } from "../InputWrapper";
 import { useCardCreation } from "../../hooks/useCardCreation";
+import { Inbox } from "../Inbox";
+import { useGetCards } from "../../hooks/useGetCards";
 
 export const Main = () => {
   const {
@@ -18,6 +20,7 @@ export const Main = () => {
     name,
     setName,
   } = useNotion();
+  const { data: cardsData } = useGetCards();
   const { mutate, isPending } = useCardCreation();
   const {
     handleKeyDown,
@@ -69,6 +72,7 @@ export const Main = () => {
     <AnimatePresence mode="wait">
       {visible && (
         <div className={styles.mainWrapper}>
+          <Inbox cardsData={cardsData} />
           <SelectionOverlay />
 
           <InputWrapper>

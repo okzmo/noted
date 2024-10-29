@@ -12,6 +12,10 @@ export interface NotionContextProps {
   setBugDescription: (bugDescription: string) => void;
   name: string | null;
   setName: (name: string) => void;
+  cards: any[];
+  setCards: (cards: any[]) => void;
+  inboxOpen: boolean;
+  setInboxOpen: (inboxOpen: boolean) => void;
 }
 
 export const NotionContext = createContext<NotionContextProps>({
@@ -26,4 +30,8 @@ export const NotionContext = createContext<NotionContextProps>({
   setBugDescription: () => {},
   name: null,
   setName: () => {},
+  cards: [],
+  setCards: () => {},
+  inboxOpen: false,
+  setInboxOpen: () => {},
 });
