@@ -63,6 +63,7 @@
   box-shadow:
     inset 0px 1px 0px #36363c,
     inset 0px 0px 0px 1px #27272b;
+  cursor: pointer;
 }
 
 .inboxButton:focus {
