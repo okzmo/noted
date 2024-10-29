@@ -1,4 +1,3 @@
-import { useGetCards } from "../../hooks/useGetCards";
 import { NotionContext } from "./NotionContext";
 import { ReactNode, useEffect, useState } from "react";
 
@@ -18,7 +17,6 @@ export const NotionProvider = ({
   const [bugTitle, setBugTitle] = useState("");
   const [bugDescription, setBugDescription] = useState("");
   const [name, setName] = useState<string | null>(null);
-  const [cards, setCards] = useState<any[]>([]);
   const [inboxOpen, setInboxOpen] = useState(false);
 
   useEffect(() => {
@@ -36,8 +34,6 @@ export const NotionProvider = ({
         setBugDescription,
         name,
         setName,
-        cards,
-        setCards,
         inboxOpen,
         setInboxOpen,
       }}

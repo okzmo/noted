@@ -1,8 +1,9 @@
 import styles from "./Inbox.module.css";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNotion } from "../../hooks/useNotion";
+import { Card } from "../../services/get-cards";
 
-export const Inbox = ({cardsData}: {cardsData: any[]}) => {
+export const Inbox = ({cardsData}: {cardsData: Card[]|undefined}) => {
   const { inboxOpen } = useNotion();
 
   return (
@@ -28,7 +29,7 @@ export const Inbox = ({cardsData}: {cardsData: any[]}) => {
             }}
             className={styles.inbox}
           >
-            {cardsData?.map((card: any, idx: number) => (
+            {cardsData?.map((card, idx) => (
               <div key={idx} className={styles.card}>
                 <span>{card.title}</span>
                 <div className={styles.cardMetadata}>

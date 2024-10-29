@@ -5,7 +5,16 @@ interface GetCardsProps {
   };
 }
 
-export const GetCards = async ({ config }: GetCardsProps) => {
+export interface Card {
+  title: string;
+  author: string;
+  status: {
+    name: string;
+    color: string;
+  }
+}
+
+export const GetCards = async ({ config }: GetCardsProps): Promise<Card[]> => {
   try {
     const res = await fetch("http://localhost:8000/get-cards", {
       method: "POST",
@@ -18,7 +27,7 @@ export const GetCards = async ({ config }: GetCardsProps) => {
       }),
     });
 
-    const data = await res.json();
+    const data = await res.json() as Card[];
 
     if (!res.ok) {
       throw new Error("Failed to fetch cards");
@@ -27,5 +36,6 @@ export const GetCards = async ({ config }: GetCardsProps) => {
     return data;
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
