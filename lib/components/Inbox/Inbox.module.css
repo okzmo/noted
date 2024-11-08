@@ -18,6 +18,10 @@
     inset 0px 0px 0px 1px #202024;
 }
 
+.inbox:hover {
+  cursor: auto;
+}
+
 .card {
   display: flex;
   flex-direction: column;
