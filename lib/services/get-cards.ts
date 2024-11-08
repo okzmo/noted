@@ -6,12 +6,17 @@ interface GetCardsProps {
 }
 
 export interface Card {
-  title: string;
-  author: string;
-  status: {
-    name: string;
-    color: string;
-  }
+	title: string;
+	author: string;
+	pinCoords: {
+		clickX: number;
+		clickY: number;
+		pathToTarget: string;
+	};
+	status: {
+		name: string;
+		color: string;
+	};
 }
 
 export const GetCards = async ({ config }: GetCardsProps): Promise<Card[]> => {

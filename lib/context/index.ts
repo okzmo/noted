@@ -1,2 +1,2 @@
 export { NotionProvider } from "./notion/NotionProvider";
-export { SelectionProvider } from "./selection/SelectionProvider";
+export { PinProvider } from "./pin/PinProvider";

@@ -1,17 +1,19 @@
 import { KeyboardEventHandler, useEffect } from "react";
 import styles from "./Main.module.css";
-import { useSelection } from "../../hooks/useSelection";
+import { usePin } from "../../hooks/usePin";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   selectTextVariants,
   textAreaVariants,
 } from "./Main.animations";
-import { SelectionOverlay } from "../SelectionOverlay/SelectionOverlay";
 import { useNotion } from "../../hooks/useNotion";
 import { InputWrapper } from "../InputWrapper";
 import { useCardCreation } from "../../hooks/useCardCreation";
 import { Inbox } from "../Inbox";
 import { useGetCards } from "../../hooks/useGetCards";
+import { PinCursor } from "../PinCursor";
+import { Pin } from "../Pin";
+import clsx from "clsx";
 
 export const Main = () => {
   const {
@@ -25,10 +27,9 @@ export const Main = () => {
   const {
     handleKeyDown,
     goToDescriptionStep,
-    selectionInfos,
-    selecting,
+    pinInfos,
     visible,
-  } = useSelection();
+  } = usePin();
 
   const handleGoToSelect: KeyboardEventHandler<HTMLInputElement> = (
     event,
@@ -69,74 +70,95 @@ export const Main = () => {
   }, [handleKeyDown]);
 
   return (
-    <AnimatePresence mode="wait">
-      {visible && (
-        <div className={styles.mainWrapper}>
-          <Inbox cardsData={cardsData} />
-          <SelectionOverlay />
+    <>
+      <AnimatePresence mode="wait">
+        {visible && (
+          <div className={styles.mainWrapper}>
+            <Inbox cardsData={cardsData} />
+            {pinInfos.pinned && (
+              <Pin 
+                pathToTarget={pinInfos.pathToTarget} 
+                clickX={pinInfos.clickX} 
+                clickY={pinInfos.clickY} 
+                author={name!} 
+                bgColor="red" 
+              />
+            )}
 
-          <InputWrapper>
-            <AnimatePresence mode="wait">
-              {!name && (
-                <motion.input
-                  key="title-input"
-                  variants={selectTextVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className={styles.titleInput}
-                  placeholder="Your name..."
-                  onKeyDown={handleGoToSelect}
-                />
-              )}
+            {cardsData?.map((card, idx) => 
+              <Pin 
+                key={idx} 
+                pathToTarget={card.pinCoords.pathToTarget} 
+                clickX={card.pinCoords.clickX} 
+                clickY={card.pinCoords.clickY} 
+                author={card.author} 
+                bgColor={card.status.color} 
+              />
+            )}
 
-              {(!selectionInfos.selectionEnded && name) && (
-                <motion.span
-                  key="select"
-                  variants={selectTextVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className={styles.select}
-                >
-                  {isPending
-                    ? "Creating the card..."
-                    : selecting
-                      ? "Selecting..."
-                      : "Select a zone"}
-                </motion.span>
-              )}
+            <InputWrapper>
+              <AnimatePresence mode="wait">
+                {!name && (
+                  <motion.input
+                    key="title-input"
+                    variants={selectTextVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className={clsx("ntd-wrapper-content", styles.titleInput)}
+                    placeholder="Your name..."
+                    onKeyDown={handleGoToSelect}
+                  />
+                )}
 
-              {selectionInfos.selectionEnded && !selectionInfos.hasTitle && (
-                <motion.input
-                  key="title-input"
-                  variants={selectTextVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className={styles.titleInput}
-                  placeholder="Describe the bug..."
-                  onKeyDown={handleGoToDescription}
-                />
-              )}
+                {(!pinInfos.pinned && name) && (
+                  <motion.span
+                    key="select"
+                    variants={selectTextVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className={clsx("ntd-wrapper-content",styles.select)}
+                  >
+                    {isPending
+                      ? "Creating the card..."
+                        : "Pin the issue"}
+                  </motion.span>
+                )}
 
-              {selectionInfos.hasTitle && (
-                <motion.textarea
-                  variants={textAreaVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  key="description-input"
-                  className={styles.input}
-                  placeholder="Send a message..."
-                  onKeyDown={handleCreateCard}
-                />
-              )}
-            </AnimatePresence>
-          </InputWrapper>
-        </div>
-      )}
-    </AnimatePresence>
+                {pinInfos.pinned && !pinInfos.hasTitle && (
+                  <motion.input
+                    key="title-input"
+                    variants={selectTextVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className={clsx("ntd-wrapper-content", styles.titleInput)}
+                    placeholder="Describe the bug..."
+                    onKeyDown={handleGoToDescription}
+                  />
+                )}
+
+                {pinInfos.hasTitle && (
+                  <motion.textarea
+                    variants={textAreaVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    key="description-input"
+                    className={clsx("ntd-wrapper-content", styles.input)}
+                    placeholder="Send a message..."
+                    onKeyDown={handleCreateCard}
+                  />
+                )}
+              </AnimatePresence>
+            </InputWrapper>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <PinCursor />
+    </>
   );
 };
 

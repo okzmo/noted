@@ -1,4 +1,4 @@
-import { SelectionProvider } from "../../context/selection/SelectionProvider";
+import { PinProvider } from "../../context/pin/PinProvider";
 import { Main } from "../Main";
 import { NotionProvider } from "../../context/notion/NotionProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -27,11 +27,11 @@ export default function Noted({
 
   return (
     <QueryClientProvider client={QueryClientInstance}>
-      <SelectionProvider>
+      <PinProvider>
         <NotionProvider apiKey={apiKey} boardId={boardId}>
           <Main />
         </NotionProvider>
-      </SelectionProvider>
+      </PinProvider>
     </QueryClientProvider>
   );
 }

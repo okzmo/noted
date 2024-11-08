@@ -15,6 +15,7 @@
   font-family: sans-serif;
   z-index: 9999;
   border: 1px solid rgba(0, 0, 0, 1);
+  cursor: auto;
   box-shadow:
     inset 0px 1px 0px #2d2d33,
     inset 0px 0px 0px 1px #202024;
@@ -87,6 +88,7 @@
 .inboxIcon {
   color: rgba(255, 255, 255, 0.3);
   transition: color 75ms ease-out;
+  pointer-events: none;
 }
 
 .inboxButton:hover .inboxIcon {
